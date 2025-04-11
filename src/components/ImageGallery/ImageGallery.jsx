@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { fetchImagesByValue } from '../../servises/pixabayAPI';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Loader from '../Loader/Loader';
+import Modal from '../Modal/Modal';
 import styles from './ImageGallery.module.css';
 import { Button } from 'components/Button';
 
@@ -12,6 +13,8 @@ class ImageGallery extends Component {
     page: 1,
     loading: false,
     error: null,
+    showModal: false,
+    modalImage: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -19,8 +22,12 @@ class ImageGallery extends Component {
     const { page } = this.state;
 
     if (prevProps.searchValue !== searchValue) {
-      this.setState({ images: [], page: 1, error: null }, this.fetchImages);
-    } else if (prevState.page !== page && page !== 1) {
+      this.setState(
+        { images: [], page: 1, error: null, showModal: false, modalImage: null },
+        this.fetchImages
+      );
+    }
+    else if (prevState.page !== page) {
       this.fetchImages();
     }
   }
@@ -30,6 +37,7 @@ class ImageGallery extends Component {
     const { page, images } = this.state;
 
     this.setState({ loading: true });
+
     try {
       const newImages = await fetchImagesByValue(searchValue, page);
       this.setState({
@@ -45,8 +53,16 @@ class ImageGallery extends Component {
     this.setState(prev => ({ page: prev.page + 1 }));
   };
 
+  openModal = image => {
+    this.setState({ showModal: true, modalImage: image });
+  };
+
+  closeModal = () => {
+    this.setState({ showModal: false, modalImage: null });
+  };
+
   render() {
-    const { images, loading, error } = this.state;
+    const { images, loading, error, showModal, modalImage } = this.state;
 
     return (
       <div>
@@ -54,14 +70,24 @@ class ImageGallery extends Component {
 
         <ul className={styles.ImageGallery}>
           {images.map(image => (
-            <ImageGalleryItem key={image.id} image={image} />
+            <ImageGalleryItem
+              key={image.id}
+              image={image}
+              onImageClick={this.openModal}
+            />
           ))}
         </ul>
 
         {loading && <Loader />}
 
         {!loading && images.length > 0 && (
-          <Button onClick={this.handleLoadMore}/>
+          <Button type="button" onClick={this.handleLoadMore}>
+            Load More
+          </Button>
+        )}
+
+        {showModal && (
+          <Modal image={modalImage} onClose={this.closeModal} />
         )}
       </div>
     );

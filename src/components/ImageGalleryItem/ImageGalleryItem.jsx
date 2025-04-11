@@ -1,12 +1,10 @@
-// src/ImageGalleryItem/ImageGalleryItem.jsx
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ImageGalleryItem.module.css';
 
-class ImageGalleryItem extends Component {
+export default class ImageGalleryItem extends Component {
   handleClick = () => {
-    // тут можна, наприклад, відкрити модалку з великим зображенням
-    // this.props.onImageClick(this.props.image.largeImageURL);
+    this.props.onImageClick(this.props.image);
   };
 
   render() {
@@ -31,6 +29,5 @@ ImageGalleryItem.propTypes = {
     largeImageURL: PropTypes.string.isRequired,
     tags: PropTypes.string,
   }).isRequired,
+  onImageClick: PropTypes.func.isRequired,
 };
-
-export default ImageGalleryItem;

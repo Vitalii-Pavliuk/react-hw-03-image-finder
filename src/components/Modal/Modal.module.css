@@ -1,17 +1,25 @@
-.Overlay {
+/* src/Modal/Modal.module.css */
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 1200;
+    z-index: 1000;
   }
   
-  .Modal {
-    max-width: calc(100vw - 48px);
-    max-height: calc(100vh - 24px);
+  .modal {
+    max-width: 90%;
+    max-height: 90%;
   }
+  
+  .modal img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
